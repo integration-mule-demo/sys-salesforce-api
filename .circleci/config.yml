@@ -1,0 +1,113 @@
+version: 2.1
+
+jobs:
+  build-test-deploy:
+    docker:
+      - image: 'circleci/openjdk:8-jdk'
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
+        environment:
+          TZ: "America/Denver"
+    parameters:
+      APP_NAME:
+        type: string
+      BUSINESS_GROUP:
+        type: string
+      CLOUDHUB_ENV:
+        type: string
+      CLOUDHUB_NAME:
+        type: string
+      CLOUDHUB_REGION:
+        type: string
+      MULE_WORKER_NUMBER:
+        type: integer
+      MULE_WORKER_SIZE:
+        type: string
+      SLACK_ENV:
+        type: string
+
+    steps:
+      - checkout
+      - restore_cache:
+          key: << parameters.APP_NAME >>-{{ checksum "pom.xml" }}
+
+      - run:
+          name: Build
+          command: |
+            bash .circleci/remove_env_config.sh
+            mvn -s settings.xml clean compile \
+            -Danypoint.user=${ANYPOINT_USER} \
+            -Danypoint.password=${ANYPOINT_PASSWORD} \
+            -Dmulerepo.user=${MULEREPO_USER} \
+            -Dmulerepo.password=${MULEREPO_PASSWORD} \
+            -Dmule.env=${MULE_ENV} \
+            -Dmule.key=${ENCRYPTION_KEY}      
+
+      - run:
+          name: mUnit Test
+          command: |
+            mvn -s settings.xml clean test \
+            -Danypoint.user=${ANYPOINT_USER} \
+            -Danypoint.password=${ANYPOINT_PASSWORD} \
+            -Dmulerepo.user=${MULEREPO_USER} \
+            -Dmulerepo.password=${MULEREPO_PASSWORD}
+            mkdir ~/munit-coverage-results
+            mkdir ~/munit-test-results
+            if [ -d target/site/munit/coverage/ ];
+            then
+              cp -r target/site/munit/coverage/. ~/munit-coverage-results
+              cp -r target/surefire-reports/. ~/munit-test-results
+            fi
+
+      - store_test_results:
+          path: ~/munit-test-results
+
+      - store_artifacts:
+          path: ~/munit-coverage-results
+
+      - run:
+          name: Cloudhub Deployment
+          no_output_timeout: 20m
+          command: |
+            mvn -s settings.xml clean package deploy \
+            -DmuleDeploy -DskipTests \
+            -Danypoint.user=${ANYPOINT_USER} \
+            -Danypoint.password=${ANYPOINT_PASSWORD} \
+            -Dmulerepo.user=${MULEREPO_USER} \
+            -Dmulerepo.password=${MULEREPO_PASSWORD} \
+            -Dmule.env=${MULE_ENV} \
+            -Dmule.key=${ENCRYPTION_KEY} \
+            -Dcloudhub.env=<< parameters.CLOUDHUB_ENV >> \
+            -Dcloudhub.name=<< parameters.CLOUDHUB_NAME >> \
+            -Dcloudhub.region=<< parameters.CLOUDHUB_REGION >> \
+            -Dworker.number=<< parameters.MULE_WORKER_NUMBER >> \
+            -Dworker.size=<< parameters.MULE_WORKER_SIZE >> \
+            -DbusinessGroup=<< parameters.BUSINESS_GROUP >> \
+            -DobjectStoreV2=true \
+            -Danypoint.platform.client_secret=${ANYPOINT_PLATFORM_CLIENT_SECRET} \
+            -Danypoint.platform.client_id=${ANYPOINT_PLATFORM_CLIENT_ID} \
+            -Danypoint.platform.config.analytics.agent.enabled=true      
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: << parameters.APP_NAME >>-{{ checksum "pom.xml" }}
+
+workflows:
+  build-deploy:
+    jobs:
+      - build-deploy:
+          APP_NAME: "sys-salesforce-api"
+          BUSINESS_GROUP: "MuleDemo"
+          CLOUDHUB_ENV: "DEV"
+          CLOUDHUB_NAME: "sys-salesforce-api"
+          CLOUDHUB_REGION: "us-west-2"
+          MULE_WORKER_NUMBER: 1
+          MULE_WORKER_SIZE: "MICRO"
+          context:
+            - DOCKER_HUB_CREDS
+            - MULESOFT_COMMON
+          filters:
+            branches:
+              only: main
