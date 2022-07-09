@@ -1,0 +1,49 @@
+version: 2.1
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          context: dev
+jobs:
+  build:
+    docker:
+      - image: 'circleci/openjdk:8-jdk'
+        environment:
+          MULE_APP_NAME: sys-salesforce-api
+          MULE_ENV: SANDBOX
+          MULE_WORKER_TYP: MICRO
+          MULE_WORKER: 1
+    steps:
+      - checkout
+      - restore_cache:
+          key: 'mulesoft-ci-cd-{{ checksum "pom.xml" }}'
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: 'mulesoft-ci-cd-{{ checksum "pom.xml" }}'
+      - run:
+          name: Build
+          command: |
+            mvn clean compile -s settings.xml \
+            -Danypoint.user=${ANYPOINT_USER} \
+            -Danypoint.password=${ANYPOINT_PASSWORD}
+      - run:
+          name: mUnit Test
+          command: |
+            mvn clean test -s settings.xml \
+            -Danypoint.user=${ANYPOINT_USER} \
+            -Danypoint.password=${ANYPOINT_PASSWORD}
+      - run:
+          name: cloudhub deployment
+          no_output_timeout: 20m
+          command: |
+            mvn -s settings.xml clean deploy -DmuleDeploy\
+            -DskipTests \
+            -Danypoint.user=${ANYPOINT_USER} \
+            -Danypoint.password=${ANYPOINT_PASSWORD} \
+            -Dcloudhub.env=${MULE_ENV} \
+            -Dcloudhub.name=${MULE_APP_NAME} \
+            -Dworker.number=${MULE_WORKER} \
+            -Dworker.size=${MULE_WORKER_TYP} \            
+            -DobjectStoreV2=true \
