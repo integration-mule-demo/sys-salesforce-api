@@ -10,8 +10,8 @@ jobs:
     docker:
       - image: 'circleci/openjdk:8-jdk'
         environment:
-          MULE_VERSION: 4.3.0
-          MULE_APP_NAME: mulesoft-gitlab-cd
+          MULE_VERSION: 4.4.0
+          MULE_APP_NAME: sys-salesforce-api
           MULE_ENV: DEV
           MULE_WORKER_TYP: MICRO
           MULE_WORKER: 1
@@ -36,10 +36,10 @@ jobs:
             -Danypoint.user=${ANYPOINT_USER} \
             -Danypoint.password=${ANYPOINT_PASSWORD}
       - run:
-          name: artifactory deployment
-          command: |
-            mvn clean deploy -s settings.xml
-      - run:
           name: cloudhub deployment
+          no_output_timeout: 20m
           command: |
             mvn -s settings.xml clean deploy -DmuleDeploy\
+            -DskipTests \
+            -Danypoint.user=${ANYPOINT_USER} \
+            -Danypoint.password=${ANYPOINT_PASSWORD} \
