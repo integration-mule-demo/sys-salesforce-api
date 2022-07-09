@@ -26,8 +26,8 @@ jobs:
           name: Build
           command: |
             mvn clean compile -s settings.xml \
-            -Danypoint.user=${ANYPOINT_USER} \
-            -Danypoint.password=${ANYPOINT_PASSWORD}
+            -Danypoint.user=dtluisf-architect \
+            -Danypoint.password=Luis1980Plus
       - run:
           name: mUnit Test
           command: |
