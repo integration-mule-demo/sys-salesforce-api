@@ -10,9 +10,8 @@ jobs:
     docker:
       - image: 'circleci/openjdk:8-jdk'
         environment:
-          MULE_VERSION: 4.4.0
           MULE_APP_NAME: sys-salesforce-api
-          MULE_ENV: DEV
+          MULE_ENV: SANDBOX
           MULE_WORKER_TYP: MICRO
           MULE_WORKER: 1
     steps:
@@ -43,3 +42,8 @@ jobs:
             -DskipTests \
             -Danypoint.user=${ANYPOINT_USER} \
             -Danypoint.password=${ANYPOINT_PASSWORD} \
+            -Dcloudhub.env=${MULE_ENV} \
+            -Dcloudhub.name=${MULE_APP_NAME} \
+            -Dworker.number=${MULE_WORKER} \
+            -Dworker.size=${MULE_WORKER_TYP} \            
+            -DobjectStoreV2=true \
