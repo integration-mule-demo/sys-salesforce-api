@@ -4,8 +4,8 @@
         <!-- MuleSoft Nexus EE Repository -->
         <server>
             <id>MuleRepository</id>
-            <username>${anypoint.user}</username>
-            <password>${anypoint.password}</password>
+            <username>dtluisf-architect</username>
+            <password>Luis1980Plus</password>
         </server>
         <server>
             <id>anypoint-exchange-v2</id>
