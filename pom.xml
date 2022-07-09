@@ -29,6 +29,14 @@
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
+				<configuration>
+		        <deploymentType>cloudhub</deploymentType>
+		        <muleVersion>4.4.0</muleVersion>
+		        <username>dtluisf-architect</username>
+		        <password>Luis1980Plus</password>
+		        <redeploy>true</redeploy>
+		        <environment>Sandbox</environment>
+		    </configuration>
 			</plugin>
 		</plugins>
 	</build>
