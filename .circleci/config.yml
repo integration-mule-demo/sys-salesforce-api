@@ -10,7 +10,7 @@ jobs:
     docker:
       - image: 'circleci/openjdk:8-jdk'
         environment:
-          MULE_APP_NAME: sys-salesforce-api
+          MULE_APP_NAME: demo-sys-salesforce-api
           MULE_ENV: SANDBOX
           MULE_WORKER_TYP: MICRO
           MULE_WORKER: 1
@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Build
           command: |
-            mvn clean compile -s settings.xml \
+            mvn -X clean compile -s settings.xml \
             -Danypoint.user=${ANYPOINT_USER} \
             -Danypoint.password=${ANYPOINT_PASSWORD}
       - run:
