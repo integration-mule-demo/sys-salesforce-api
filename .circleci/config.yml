@@ -4,7 +4,7 @@ workflows:
   build-deploy:
     jobs:
       - build:
-          context: mule
+          context: dev
 jobs:
   build:
     docker:
@@ -26,11 +26,15 @@ jobs:
       - run:
           name: Build
           command: |
-            mvn clean compile -s settings.xml
+            mvn clean compile -s settings.xml \
+            -Danypoint.user=${ANYPOINT_USER} \
+            -Danypoint.password=${ANYPOINT_PASSWORD}
       - run:
           name: mUnit Test
           command: |
-            mvn clean test -s settings.xml
+            mvn clean test -s settings.xml \
+            -Danypoint.user=${ANYPOINT_USER} \
+            -Danypoint.password=${ANYPOINT_PASSWORD}
       - run:
           name: artifactory deployment
           command: |
