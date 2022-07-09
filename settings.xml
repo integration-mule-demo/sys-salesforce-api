@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <pluginGroups>
+        <pluginGroup>org.mule.tools</pluginGroup>
+    </pluginGroups>
     <servers>
-    	<server>
-            <id>mulesoft-public</id>
-            <username>${anypoint.user}</username>
-            <password>${anypoint.password}</password>
-        </server>
         <server>
             <id>mulesoft-releases</id>
             <username>${anypoint.user}</username>
@@ -24,30 +22,25 @@
     </servers>
     <profiles>
         <profile>
-            <id>Mule</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <repositories>
-                <repository>
-					    <id>mulesoft-public</id>
-					    <name>MuleSoft Public Repository</name>
-					    <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
-					    <layout>default</layout>
-					</repository>	
-				<repository>
-        <id>mulesoft-releases</id>
-        <name>MuleSoft Repository</name>
-        <url>http://repository.mulesoft.org/releases/</url>
-        <layout>default</layout>
-    </repository>
-    <repository>
-        <id>mulesoft-snapshots</id>
-        <name>MuleSoft Snapshot Repository</name>
-        <url>http://repository.mulesoft.org/snapshots/</url>
-        <layout>default</layout>
-    </repository>							
-            </repositories>
-        </profile>
+    <id>Mule Org</id>
+    <activation>
+        <activeByDefault>true</activeByDefault>
+    </activation>
+    <repositories>
+        <repository>
+            <id>mulesoft-releases</id>
+            <name>MuleSoft Repository</name>
+            <url>https://repository-master.mulesoft.org/releases/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>mulesoft-snapshots</id>
+            <name>MuleSoft Snapshot Repository</name>
+            <url>https://repository-master.mulesoft.org/snapshots/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+</profile>
+        
     </profiles>
 </settings>
