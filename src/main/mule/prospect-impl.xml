@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="get-prospects-subflow" doc:id="d8d792c0-1a10-4559-9594-5a3ee1524549" >
+		<set-variable value="#[attributes.queryParams.'includeMigrated' default false]" doc:name="Set includeMigrated" doc:id="9142f472-80a4-40e7-ab5c-094a33ff7069" variableName="includeMigrated"/>
+		<set-variable value="#[attributes.queryParams.'Name']" doc:name="Set name" doc:id="a2b28f3e-52de-4819-8de3-1f2eceee6c29" variableName="name" />
+		<set-variable value="#[attributes.queryParams.'Phone']" doc:name="Set phone" doc:id="95387eb1-2a89-4107-9f16-d49be99cab6d" variableName="phone" />
+		<ee:transform doc:name="Build Query" doc:id="2d1d8ef2-5fd5-4e17-80e2-bc564def8ca1">
+			<ee:message>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="sfQuery" ><![CDATA[%dw 2.0
+output application/java
+
+var migrated =  if (!vars.includeMigrated) " AND Migrated__c = false"  else ''
+var phoneORname = if (!isEmpty(vars.phone) and !isEmpty(vars.name)) 
+ 	" AND (Phone = '" ++ (vars.phone default '') ++ "' OR Name = '" ++ (vars.name default '') ++ "')" 
+else if (!isEmpty(vars.phone) and isEmpty(vars.name)) 
+	" AND Phone = '" ++ (vars.phone default '') ++ "' " 
+else if (isEmpty(vars.phone) and !isEmpty(vars.name)) 
+	" AND Name = '" ++ (vars.name default '') ++ "' " 
+else ""
+---
+"SELECT Name,Phone,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,
+		Id,Migrated__c 
+ FROM Account
+ WHERE Type='Prospect'" ++ migrated ++ phoneORname]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<salesforce:query-all doc:name="Query all" doc:id="a793f7e7-8065-4569-8f56-3700e6f37b5c" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[#[vars.sfQuery]]]></salesforce:salesforce-query>
+		</salesforce:query-all>
+		<ee:transform doc:name="Format Output" doc:id="ff8377c2-5513-43bb-a13a-0c8ce93f0ebd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	name: payload01.Name default "",
+	id: payload01.Id,
+	phone: payload01.Phone default "",
+	address: {
+		country: payload01.BillingCountry default "",
+		city: payload01.BillingCity default "",
+		street: payload01.BillingStreet default "",
+		postalCode: payload01.BillingPostalCode default "",
+		state: payload01.BillingState default ""
+	}	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="get-prospect-by-ID-subflow" doc:id="78f0092d-761c-4900-89ad-b2ca012b4124" >
+		<set-variable value="#[attributes.uriParams.'ID']" doc:name="Set prospectId" doc:id="18027b6c-1c9b-4e4b-adf6-2e3644edbe0b" variableName="prospectId"/>
+		<salesforce:query doc:name="Get Prospect" doc:id="d7d98b38-e6e2-41dd-a7bc-3947b24e62df" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[SELECT Phone,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,Id,Name FROM Account
+where Id=:prospectId]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	"prospectId" : "'" ++ vars.prospectId default '' ++ "'"
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<validation:is-not-empty-collection doc:name="Prospect Exists ?" doc:id="55a9cfff-9cad-427d-8477-cd9e218711f4" message="#['Given Id: [' ++ vars.prospectId ++ ']']">
+			<error-mapping sourceType="VALIDATION:EMPTY_COLLECTION" targetType="APP:PROSP_NOT_FOUND" />
+		</validation:is-not-empty-collection>
+		<ee:transform doc:name="Format Output" doc:id="9964f770-5574-4c33-9087-3648c3691e50" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	name: payload[0].Name default "",
+	id: payload[0].Id default "",
+	phone: payload[0].Phone default "",
+	address: {
+		street: payload[0].BillingStreet default "",
+		city: payload[0].BillingCity default "",
+		state: payload[0].BillingState default "",
+		country: payload[0].BillingCountry default "",
+		postalCode: payload[0].BillingPostalCode default ""
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="post-prospect-subflow" doc:id="423d1eee-32fa-4fe4-ad93-f893bb12f6d5" >
+		<salesforce:create type="Account" doc:name="Create" doc:id="b758a156-3a6a-4d68-974e-a27e6a253169" config-ref="Salesforce_Config">
+			<salesforce:records ><![CDATA[#[[
+	{
+    "Name": payload.name,
+    "Phone": payload.phone,
+    "BillingStreet": payload.address.street,
+    "BillingCity": payload.address.city,
+    "BillingState": payload.address.state,
+    "BillingCountry": payload.address.country,
+    "BillingPostalCode": payload.address.postalCode,
+    "Type":"Prospect",
+    "Migrated__c": false
+}
+]]]]></salesforce:records>
+		</salesforce:create>
+		<choice doc:name="Successfully Created ?" doc:id="3322031e-9650-4301-9235-9d59bc9233bb" >
+			<when expression="#[payload.items[0].successful]">
+				<ee:transform doc:name="Format Output" doc:id="be1ca450-7226-407a-bc4b-296043936c74">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{ 
+	"message": "Prospect was successfully created"	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<raise-error doc:name="Raise error" doc:id="986618bf-e673-48d9-ba5c-688b507a904e" type="APP:PROSP_NOT_CREATED" description="Verify details about error"/>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>

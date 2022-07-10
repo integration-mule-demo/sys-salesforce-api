@@ -45,3 +45,4 @@ target/
 .DS_Store
 velocity.log
 .tooling/*
+src/main/resources/weave/*

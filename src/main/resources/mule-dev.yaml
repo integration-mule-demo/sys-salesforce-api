@@ -1,0 +1,10 @@
+tls:
+  path: "![I851AITzccwV06St+/u6iQ==]"
+  alias: "![/UvCEkGrEW9nibQgmS4M5A==]"
+  key: "![3lEumFBKcKU=]"
+  pwd: "![3lEumFBKcKU=]"
+
+salesforce:
+  user:  "![drKpu7GgG+uZSfWEKGDYT+iHf0NLQuDpFrk6UR1Lbsw=]"
+  pwd:  "$3cur3Password"
+  token:  "![g7P6CqL9Bry5YBUF7biicrQ11maKoN73qeEl3PdaaL8=]"

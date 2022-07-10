@@ -1,0 +1,12 @@
+{
+    "name": "Customer Two",
+    "id": "0018c00002Pxl06AAB",
+    "phone": "9874589623",
+    "address": {
+      "street": "Main Street 123",
+      "city": "Salt Lake City",
+      "state": "UTAH",
+      "country": "USA",
+      "postalCode": "87965"
+    }
+}

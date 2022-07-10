@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd  http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+    <http:listener-config name="sys-salesforce-api-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="${http.port}" protocol="HTTPS">
+            <tls:context>
+                <tls:key-store type="jks" path="${secure::tls.path}" alias="${secure::tls.alias}" keyPassword="${secure::tls.key}" password="${secure::tls.pwd}" />
+            </tls:context>
+        </http:listener-connection>
+    </http:listener-config>
+    <apikit:config name="sys-salesforce-api-config" api="resource::0efa2e96-5661-4a95-ab6d-dc1f38566678:sys-salesforce-api:1.0.4:raml:zip:sys-salesforce-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <global-property doc:name="Global Property" doc:id="3fa5d29f-ac89-4d49-8ed4-221940f5f52f" name="mule-env" value="dev" />
+    <global-property doc:name="Global Property" doc:id="9f9ffd9d-7299-437b-8573-39b6f5aecdf0" name="mule-key" value="DevEncryptionKey" />
+    <configuration-properties doc:name="Configuration properties" doc:id="98169494-bb13-45fd-ab1c-d3e08a90f40c" file="mule-app-config.properties" />
+    <secure-properties:config name="Env-Configs" doc:name="Secure Properties Config" doc:id="e5dc6011-7ee8-4e2e-a446-51320301a147" file="mule-${mule-env}.yaml" key="${mule-key}">
+        <secure-properties:encrypt algorithm="Blowfish" />
+    </secure-properties:config>
+    <configuration doc:name="Configuration" doc:id="1aafdb5a-9e43-4f5e-9d23-1d77751a347e" defaultErrorHandler-ref="appGlobalErrorHandler" />
+    <configuration-properties doc:name="Configuration properties" doc:id="a36f1d8b-f15f-4476-be9a-42e6ad6b42ad" file="mule-exceptions.properties" />
+    <salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="24f915dc-5ce2-473d-86c4-6361d343cb39">
+        <salesforce:basic-connection username="${secure::salesforce.user}" password="${secure::salesforce.pwd}" securityToken="${secure::salesforce.token}" />
+    </salesforce:sfdc-config>
+</mule>

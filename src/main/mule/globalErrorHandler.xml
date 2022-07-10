@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<error-handler name="appGlobalErrorHandler" doc:id="70be559a-fe4d-4211-95fd-3a0373b6e52d" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c892feaf-ffcb-4452-8ffe-15ff537652a5" type="ANY">
+			<ee:transform doc:name="Custom Error Message" doc:id="540e77c8-c2cb-4c78-aaaf-bf1c28026910" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var errorNameSpace = error.errorType.namespace default 'APP'
+var errorIdentifier = error.errorType.identifier default 'UNHANDLED'
+var description = error.description default ''
+---
+{
+	"error":{
+		"error_code": p('errorCodePrefix') ++ '-' ++ p(errorIdentifier ++ '.code')  default (p('errorCodePrefix') ++ '-' ++ p('UNEXPECTED_ERROR.code')),
+		"error_msg": p(errorIdentifier ++ '.message')  default p('UNEXPECTED_ERROR.message'),
+		"error_data": errorNameSpace ++ ':' ++ errorIdentifier ++ '(' ++ description ++ ')'
+	}
+}]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[var errorIdentifier = error.errorType.identifier default 'UNEXPECTED_ERROR'
+var errorCode = p(errorIdentifier ++ '.code') default p('UNEXPECTED_ERROR.code')
+var httpStatusVal = p(errorIdentifier ++ '.httpStatus') default null
+---
+if(httpStatusVal != null)
+	httpStatusVal	
+else
+	if (errorCode as String == '1') 500 else 400	]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</on-error-propagate>
+	</error-handler>
+</mule>
