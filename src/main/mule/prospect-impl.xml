@@ -6,8 +6,7 @@
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
-	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="6482f881-23fd-44ea-a2bf-245400acbfc9" environment="${mule.env}" />
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">	
 	<sub-flow name="get-prospects-subflow" doc:id="d8d792c0-1a10-4559-9594-5a3ee1524549" >
 		<json-logger:logger doc:name="Start" doc:id="beaf0b36-fd5b-472c-a170-5a9ce73f4c17" config-ref="JSON_Logger_Config" message="Starting flow"/>
 		<set-variable value="#[attributes.queryParams.'includeMigrated' default true]" doc:name="Set includeMigrated" doc:id="9142f472-80a4-40e7-ab5c-094a33ff7069" variableName="includeMigrated"/>
