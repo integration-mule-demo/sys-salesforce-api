@@ -68,7 +68,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		<json-logger:logger doc:name="Start" doc:id="71ec2745-434b-4ad8-8dfc-ce28828f5b5d" config-ref="JSON_Logger_Config" message="Starting flow" />
 		<set-variable value="#[attributes.uriParams.'ID']" doc:name="Set prospectId" doc:id="18027b6c-1c9b-4e4b-adf6-2e3644edbe0b" variableName="prospectId"/>
 		<salesforce:query doc:name="Get Prospect" doc:id="d7d98b38-e6e2-41dd-a7bc-3947b24e62df" config-ref="Salesforce_Config">
-			<salesforce:salesforce-query ><![CDATA[SELECT Phone,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,Id,Name FROM Account
+			<salesforce:salesforce-query ><![CDATA[SELECT Phone,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,Id,Name,ExternalId__c FROM Account
 where Id=:prospectId]]></salesforce:salesforce-query>
 			<salesforce:parameters ><![CDATA[#[output application/java
 ---
@@ -88,6 +88,7 @@ output application/json
 	name: payload[0].Name default "",
 	id: payload[0].Id default "",
 	phone: payload[0].Phone default "",
+	externalId: payload.ExternalId__c default "",
 	address: {
 		street: payload[0].BillingStreet default "",
 		city: payload[0].BillingCity default "",
@@ -118,7 +119,8 @@ output application/json
     "BillingCountry": payload.address.country,
     "BillingPostalCode": payload.address.postalCode,
     "Type":"Prospect",
-    "Migrated__c": false
+    "Migrated__c": false,
+    "ExternalId__c": payload.externalId
 }
 ]]]]></salesforce:records>
 		</salesforce:create>
