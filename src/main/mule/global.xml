@@ -20,5 +20,5 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
     <salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="24f915dc-5ce2-473d-86c4-6361d343cb39">
         <salesforce:basic-connection username="${secure::salesforce.user}" password="${secure::salesforce.pwd}" securityToken="${secure::salesforce.token}" />
     </salesforce:sfdc-config>
-    <json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="06e40896-5b87-41e0-89d7-999043164e53" environment="${mule.env}" />
+    <json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="06e40896-5b87-41e0-89d7-999043164e53" environment="${mule-env}" />
 </mule>
