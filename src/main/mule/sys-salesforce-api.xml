@@ -129,6 +129,6 @@ output application/json
         <flow-ref doc:name="Get Prospect By ID" doc:id="c70ba082-10c2-4f42-a03b-d0ebe6359697" name="get-prospect-by-ID-subflow" />
     </flow>
     <flow name="patch:\prospect\(ID):application\json:sys-salesforce-api-config">
-        <flow-ref doc:name="Update External Id" doc:id="9b6c92cb-89a3-4417-ad28-5cbd35d2cdab" name="patch-prospect-subflow"/>
+        <flow-ref doc:name="Update External Id" doc:id="9b6c92cb-89a3-4417-ad28-5cbd35d2cdab" name="patch-prospect-subflow" />
     </flow>
 </mule>
