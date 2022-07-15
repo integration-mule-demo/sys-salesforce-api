@@ -92,7 +92,7 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="sys-salesforce-api-console">
+    <flow name="sys-salesforce-api-console" doc:id="8546029e-397e-45fa-b9de-7d3bed2dba23">
         <http:listener config-ref="sys-salesforce-api-httpListenerConfig" path="/console/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>

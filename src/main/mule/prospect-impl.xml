@@ -8,11 +8,10 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">	
 	<sub-flow name="get-prospects-subflow" doc:id="d8d792c0-1a10-4559-9594-5a3ee1524549" >
-		<json-logger:logger doc:name="Start" doc:id="beaf0b36-fd5b-472c-a170-5a9ce73f4c17" config-ref="JSON_Logger_Config" message="Starting flow"/>
+		<json-logger:logger doc:name="Start" doc:id="beaf0b36-fd5b-472c-a170-5a9ce73f4c17" config-ref="JSON_Logger_Config" message="Starting flow" />
 		<set-variable value="#[attributes.queryParams.'includeMigrated' default true]" doc:name="Set includeMigrated" doc:id="9142f472-80a4-40e7-ab5c-094a33ff7069" variableName="includeMigrated"/>
 		<set-variable value="#[attributes.queryParams.'Name']" doc:name="Set name" doc:id="a2b28f3e-52de-4819-8de3-1f2eceee6c29" variableName="name" />
 		<set-variable value="#[attributes.queryParams.'Phone']" doc:name="Set phone" doc:id="95387eb1-2a89-4107-9f16-d49be99cab6d" variableName="phone" />
-		<logger level="INFO" doc:name="Logger start request" doc:id="b5bdb99b-1cff-45ea-a2d9-d3dbdc042d14" message="#[&quot;Request with filters: Name(&quot; ++ (vars.name default '') ++ &quot;), Phone(&quot; ++ (vars.phone default '')++&quot;) and includeMigrated(&quot; ++ (vars.includeMigrated) ++ &quot;)&quot;]"/>
 		<ee:transform doc:name="Build Query" doc:id="2d1d8ef2-5fd5-4e17-80e2-bc564def8ca1">
 			<ee:message>
 			</ee:message>
@@ -120,7 +119,7 @@ output application/json
     "BillingPostalCode": payload.address.postalCode,
     "Type":"Prospect",
     "Migrated__c": false,
-    "ExternalId__c": payload.externalId
+    "ExternalId__c": payload.externalId default ''
 }
 ]]]]></salesforce:records>
 		</salesforce:create>
@@ -145,7 +144,7 @@ output application/json
 		<json-logger:logger doc:name="End" doc:id="229d63cd-171e-4493-bf1a-b430225c9240" config-ref="JSON_Logger_Config" message="Finishing flow" tracePoint="END" >
 			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
-    payload: ''
+    
 }]]]></json-logger:content>
 		</json-logger:logger>
 	</sub-flow>

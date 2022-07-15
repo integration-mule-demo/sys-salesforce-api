@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="prospect-impl-suite.xml" />
+	<munit:test name="get-prospects-subflow-test" doc:id="d1aee2ed-e12d-4d25-a766-41905fc2d7c0">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Salesforce response" doc:id="c5f5d5e1-5231-499a-b549-0110651fb7e7" processor="salesforce:query-all">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Query all" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="a793f7e7-8065-4569-8f56-3700e6f37b5c" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://test_resources/prospects-salesforce-response.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get-prospects-subflow" doc:id="81250a22-c752-46af-8fd0-09673e422f2f" name="get-prospects-subflow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify Format Output Call" doc:id="622f6f01-524d-4ccd-8277-53b31d01cef1" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ff8377c2-5513-43bb-a13a-0c8ce93f0ebd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get-prospects-empty-response-test" doc:id="6d875045-1b5b-48b1-95eb-d2e20e7ae2b3">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Empty response" doc:id="249b4127-6ae3-4ff1-923c-7f3bcbf7e3de" processor="salesforce:query-all">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Query all" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="a793f7e7-8065-4569-8f56-3700e6f37b5c" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[[]]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="get-prospects-subflow" doc:id="b811f5ab-bed0-4784-9e1b-8806b243e1fb" name="get-prospects-subflow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify Format Output Call" doc:id="082645b0-d82b-41d5-a9db-564bc297f4b8" processor="ee:transform">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Format Output" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="ff8377c2-5513-43bb-a13a-0c8ce93f0ebd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post-prospect-failed" doc:id="56a19f1c-a834-4e9f-98a5-01ef47f91537" expectedErrorType="APP:PROSP_NOT_CREATED" expectedErrorDescription="Verify details about error">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Error on creation" doc:id="4a052cc1-55d1-4f1e-8881-df9700515ea0" processor="salesforce:create">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Create" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="b758a156-3a6a-4d68-974e-a27e6a253169" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[&#10;	{&#10;		items:[&#10;			successful: false&#10;		]&#10;	}&#10;]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="post-prospect-subflow" doc:id="09a173b4-a1e9-4e0d-a6b1-cbb6257e3866" name="post-prospect-subflow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify error call" doc:id="5f421d56-2559-4273-b12f-3c4b613f90d8" processor="raise-error">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Raise error" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="986618bf-e673-48d9-ba5c-688b507a904e" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="APP:PROSP_NOT_CREATED" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Verify details about error" attributeName="description" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post-prospect-success" doc:id="80e25ba5-16cf-4b0e-b54d-1d59831a93ee">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Success on creation" doc:id="1ebe3ab2-ed05-41c7-8d4e-5d6134dbf151" processor="salesforce:create" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Create" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="b758a156-3a6a-4d68-974e-a27e6a253169" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[&#10;	{&#10;		items:[&#10;			successful: true&#10;		]&#10;	}&#10;]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="post-prospect-subflow" doc:id="c839a4eb-e2ea-48cf-8705-569811478d37" name="post-prospect-subflow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify finishing flow" doc:id="d92616ea-8807-4b25-b32f-31ba0e84baec" processor="json-logger:logger" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="End" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="229d63cd-171e-4493-bf1a-b430225c9240" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="JSON_Logger_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="Finishing flow" attributeName="message" />
+					<munit-tools:with-attribute whereValue="END" attributeName="tracePoint" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get-prospectById-test" doc:id="8ceab41d-6b07-41f1-b147-dd2f18ab6132">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Attributes" doc:id="1b2ba61d-2664-4855-81b0-7a36aee280b6" >
+				<munit:attributes value='#[{&#10;		uriParams:{&#10;			ID : "anything"&#10;		}&#10;	}&#10;]' />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Salesforce response" doc:id="b33037b7-cc7e-4e43-bd04-91a18701490e" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Prospect" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="d7d98b38-e6e2-41dd-a7bc-3947b24e62df" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://test_resources/prospect-salesforce-response.dwl')]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="get-prospect-by-ID-subflow" doc:id="a01cdd1c-0dc6-4171-b854-b04b677aa71b" name="get-prospect-by-ID-subflow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify finishing flow" doc:id="dce4a7e2-8823-41e6-9685-c25087f1bc9a" processor="json-logger:logger">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="End" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="7909fd48-020b-480f-ae25-55adc79e7555" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="JSON_Logger_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="Finishing flow" attributeName="message" />
+					<munit-tools:with-attribute whereValue="END" attributeName="tracePoint" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get-prospectById-not-found" doc:id="0d458755-2fdb-4d9e-a158-488da0a08ad6" expectedErrorType="APP:PROSP_NOT_FOUND">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Attributes" doc:id="a75803e1-bcf1-4f15-8034-301a9c9a6303" >
+				<munit:attributes value='#[{&#10;		uriParams:{&#10;			ID : "anything"&#10;		}&#10;	}&#10;]' />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Salesforce response" doc:id="e135cabd-e3f3-4eb0-a5b0-77b1600905ef" processor="salesforce:query" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Get Prospect" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="d7d98b38-e6e2-41dd-a7bc-3947b24e62df" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[[]]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="get-prospect-by-ID-subflow" doc:id="d88700a0-a07f-474b-b900-19998cc9153f" name="get-prospect-by-ID-subflow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify finishing flow is not called" doc:id="4a7f7e6b-a65c-4ae7-bd5f-1f3c3b159ee9" processor="json-logger:logger" times="0">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="End" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="7909fd48-020b-480f-ae25-55adc79e7555" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="JSON_Logger_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="Finishing flow" attributeName="message" />
+					<munit-tools:with-attribute whereValue="END" attributeName="tracePoint" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="patch-prospect-failed" doc:id="70c27679-51c6-4a58-8cec-0861cfeab85a" expectedErrorType="APP:PROSP_NOT_UPDATED">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Attributes and Payload" doc:id="ce39f21d-c63b-4f3b-8aa0-c8a9dd0623e1">
+				<munit:payload value="#[&#10;	{&#10;		externalId: 'anything'&#10;	}&#10;]" />
+				<munit:attributes value='#[{&#10;		uriParams:{&#10;			ID : "anything"&#10;		}&#10;	}&#10;]' />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Error on update" doc:id="2a6189de-d5b8-4c12-9471-cefbe881ce09" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Update" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="897d2181-1ad0-4720-b690-c8ec1fd0002e" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[&#10;	{&#10;		items:[&#10;			successful: false&#10;		]&#10;	}&#10;]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="patch-prospect-subflow" doc:id="5e1ca8d2-77c6-4d81-817c-38f518e6baca" name="patch-prospect-subflow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify error call" doc:id="4d7b99f9-270a-4c28-9f2b-256b6a8a9049" processor="raise-error" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Raise error" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="36f4dfe7-478c-44a6-8671-412c84c914bb" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="APP:PROSP_NOT_UPDATED" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Verify details about error" attributeName="description" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="patch-prospect-success" doc:id="a858c5ca-9f5e-4754-ac9a-c5246a5585e9">
+		<munit:behavior >
+			<munit:set-event doc:name="Set Attributes and Payload" doc:id="36fadd09-8812-41f4-9674-46b4274a9496">
+				<munit:payload value="#[&#10;	{&#10;		externalId: 'anything'&#10;	}&#10;]" />
+				<munit:attributes value='#[{&#10;		uriParams:{&#10;			ID : "anything"&#10;		}&#10;	}&#10;]' />
+			</munit:set-event>
+			<munit-tools:mock-when doc:name="Success on update" doc:id="1a852310-fa97-4a64-ae47-e4ed1165e621" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Account" attributeName="type" />
+					<munit-tools:with-attribute whereValue="Update" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="897d2181-1ad0-4720-b690-c8ec1fd0002e" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Salesforce_Config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[&#10;	{&#10;		items:[&#10;			successful: true&#10;		]&#10;	}&#10;]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="patch-prospect-subflow" doc:id="6903f93e-3050-4ac2-8c57-2e33b76d25a3" name="patch-prospect-subflow" />
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:verify-call doc:name="Verify finishing flow" doc:id="564e3d81-d251-4700-a5a6-430aa0035905" processor="json-logger:logger" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="End" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="d0f6ab42-2cbb-495d-9a0d-b47a21f54693" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="JSON_Logger_Config" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="Finishing flow" attributeName="message" />
+					<munit-tools:with-attribute whereValue="END" attributeName="tracePoint" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+</mule>
