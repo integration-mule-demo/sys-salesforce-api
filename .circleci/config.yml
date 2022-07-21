@@ -20,7 +20,7 @@ jobs:
           key: 'mulesoft-ci-cd-{{ checksum "pom.xml" }}'
       - save_cache:
           paths:
-            - ~/.m2
+            - ~/.m2/repository
           key: 'mulesoft-ci-cd-{{ checksum "pom.xml" }}'
       - run:
           name: Build
