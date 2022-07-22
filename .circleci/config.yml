@@ -11,9 +11,11 @@ jobs:
       - image: 'circleci/openjdk:8-jdk'
         environment:
           MULE_APP_NAME: demo-sys-salesforce-api
-          MULE_ENV: SANDBOX
-          MULE_WORKER_TYP: MICRO
+          MULE_ENV: Sandbox
+          MULE_WORKER_TYP: Micro
           MULE_WORKER: 1
+          MULE_REGION: us-east-2
+          MULE_OSv2: true
     steps:
       - checkout
       - restore_cache:
@@ -25,23 +27,22 @@ jobs:
       - run:
           name: Build
           command: |
-            mvn clean compile
+            mvn clean compile 
       - run:
           name: mUnit Test
           command: |
-            mvn clean test -s settings.xml \
-            -Danypoint.user=${ANYPOINT_USER} \
-            -Danypoint.password=${ANYPOINT_PASSWORD}
+            mvn clean test 
       - run:
           name: cloudhub deployment
           no_output_timeout: 20m
-          command: |
-            mvn -s settings.xml clean deploy -DmuleDeploy\
-            -DskipTests \
+          command: |            
+            mvn clean package deploy -DmuleDeploy  \
             -Danypoint.user=${ANYPOINT_USER} \
             -Danypoint.password=${ANYPOINT_PASSWORD} \
-            -Dcloudhub.env=${MULE_ENV} \
-            -Dcloudhub.name=${MULE_APP_NAME} \
-            -Dworker.number=${MULE_WORKER} \
-            -Dworker.size=${MULE_WORKER_TYP} \            
-            -DobjectStoreV2=true \
+            -Danypoint.workers=${MULE_WORKER} \
+            -Danypoint.workerType=${MULE_WORKER_TYP} \
+            -Danypoint.env=${MULE_ENV} \
+            -Danypoint.appName=${MULE_APP_NAME} \
+            -Danypoint.region=${MULE_REGION} \
+            -Danypoint.osv2=${MULE_OSv2}
+            
