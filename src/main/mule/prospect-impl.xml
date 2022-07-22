@@ -50,7 +50,7 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 		city: payload01.BillingCity default "",
 		street: payload01.BillingStreet default "",
 		postalCode: payload01.BillingPostalCode default "",
-		state: payload01.BillingState default ""
+		stateCode: payload01.BillingState default ""
 	}	
 }]]></ee:set-payload>
 			</ee:message>
