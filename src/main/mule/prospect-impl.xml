@@ -8,7 +8,6 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">	
 	<sub-flow name="get-prospects-subflow" doc:id="d8d792c0-1a10-4559-9594-5a3ee1524549" >
-		<json-logger:logger doc:name="Start" doc:id="beaf0b36-fd5b-472c-a170-5a9ce73f4c17" config-ref="JSON_Logger_Config" message="Starting flow" />
 		<set-variable value="#[attributes.queryParams.'includeMigrated' default true]" doc:name="Set includeMigrated" doc:id="9142f472-80a4-40e7-ab5c-094a33ff7069" variableName="includeMigrated"/>
 		<set-variable value="#[attributes.queryParams.'Name']" doc:name="Set name" doc:id="a2b28f3e-52de-4819-8de3-1f2eceee6c29" variableName="name" />
 		<set-variable value="#[attributes.queryParams.'Phone']" doc:name="Set phone" doc:id="95387eb1-2a89-4107-9f16-d49be99cab6d" variableName="phone" />
@@ -56,15 +55,8 @@ payload map ( payload01 , indexOfPayload01 ) -> {
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<json-logger:logger doc:name="End" doc:id="6cff8112-b86e-4c49-b168-4721f2f37d8d" config-ref="JSON_Logger_Config" message="Finishing flow" tracePoint="END">
-			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
-{
-    payload: ''
-}]]]></json-logger:content>
-		</json-logger:logger>
 	</sub-flow>
 	<sub-flow name="get-prospect-by-ID-subflow" doc:id="78f0092d-761c-4900-89ad-b2ca012b4124" >
-		<json-logger:logger doc:name="Start" doc:id="71ec2745-434b-4ad8-8dfc-ce28828f5b5d" config-ref="JSON_Logger_Config" message="Starting flow" />
 		<set-variable value="#[attributes.uriParams.'ID']" doc:name="Set prospectId" doc:id="18027b6c-1c9b-4e4b-adf6-2e3644edbe0b" variableName="prospectId"/>
 		<salesforce:query doc:name="Get Prospect" doc:id="d7d98b38-e6e2-41dd-a7bc-3947b24e62df" config-ref="Salesforce_Config">
 			<salesforce:salesforce-query ><![CDATA[SELECT Phone,BillingCity,BillingCountry,BillingPostalCode,BillingState,BillingStreet,Id,Name,ExternalId__c FROM Account
@@ -98,15 +90,8 @@ output application/json
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<json-logger:logger doc:name="End" doc:id="7909fd48-020b-480f-ae25-55adc79e7555" config-ref="JSON_Logger_Config" message="Finishing flow" tracePoint="END" >
-			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
-{
-    payload: ''
-}]]]></json-logger:content>
-		</json-logger:logger>
 	</sub-flow>
 	<sub-flow name="post-prospect-subflow" doc:id="423d1eee-32fa-4fe4-ad93-f893bb12f6d5" >
-		<json-logger:logger doc:name="Start" doc:id="c6035178-13bd-4697-967f-01b14710f7a7" config-ref="JSON_Logger_Config" message="Starting flow" />
 		<salesforce:create type="Account" doc:name="Create" doc:id="b758a156-3a6a-4d68-974e-a27e6a253169" config-ref="Salesforce_Config">
 			<salesforce:records ><![CDATA[#[[
 	{
@@ -141,15 +126,8 @@ output application/json
 				<raise-error doc:name="Raise error" doc:id="986618bf-e673-48d9-ba5c-688b507a904e" type="APP:PROSP_NOT_CREATED" description="Verify details about error"/>
 			</otherwise>
 		</choice>
-		<json-logger:logger doc:name="End" doc:id="229d63cd-171e-4493-bf1a-b430225c9240" config-ref="JSON_Logger_Config" message="Finishing flow" tracePoint="END" >
-			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
-{
-    
-}]]]></json-logger:content>
-		</json-logger:logger>
 	</sub-flow>
 	<sub-flow name="patch-prospect-subflow" doc:id="4cf168ae-3c48-48f7-aeba-41d517365e95" >
-		<json-logger:logger doc:name="Start" doc:id="0c03a2b3-c925-4ad3-a497-b74b2186a29e" config-ref="JSON_Logger_Config" message="Starting flow" />
 		<set-variable value="#[attributes.uriParams.'ID']" doc:name="Set prospectId" doc:id="727e2cb2-e909-4cb6-a910-04718643a7be" variableName="prospectId" />
 		<set-variable value="#[payload.externalId]" doc:name="Set externalId" doc:id="11198258-3e60-43d7-8ad3-f1961b5fc459" variableName="externalId" />
 		<salesforce:update type="Account" doc:name="Update" doc:id="897d2181-1ad0-4720-b690-c8ec1fd0002e" config-ref="Salesforce_Config">
@@ -177,11 +155,5 @@ output application/json
 				<raise-error doc:name="Raise error" doc:id="36f4dfe7-478c-44a6-8671-412c84c914bb" type="APP:PROSP_NOT_UPDATED" description="Verify details about error" />
 			</otherwise>
 		</choice>
-		<json-logger:logger doc:name="End" doc:id="d0f6ab42-2cbb-495d-9a0d-b47a21f54693" config-ref="JSON_Logger_Config" message="Finishing flow" tracePoint="END" >
-			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
-{
-    payload: ''
-}]]]></json-logger:content>
-		</json-logger:logger>
 	</sub-flow>
 </mule>
