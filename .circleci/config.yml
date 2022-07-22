@@ -10,7 +10,7 @@ jobs:
     docker:
       - image: 'circleci/openjdk:8-jdk'
         environment:
-          MULE_APP_NAME: demo-sys-salesforce-api
+          MULE_APP_NAME: demo1-sys-salesforce-api
           MULE_ENV: Sandbox
           MULE_WORKER_TYP: Micro
           MULE_WORKER: 1
