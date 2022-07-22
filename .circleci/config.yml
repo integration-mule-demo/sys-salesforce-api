@@ -5,6 +5,10 @@ workflows:
     jobs:
       - build:
           context: dev
+          filters:
+            branches:
+              only: release
+
 jobs:
   build:
     docker:
