@@ -29,6 +29,10 @@ jobs:
             - ~/.m2/repository
           key: 'mulesoft-ci-cd-{{ checksum "pom.xml" }}'
       - run:
+          name: get Pom
+          command: |
+            curl https://maven.anypoint.mulesoft.com/api/v3/maven/34e5fc2b-f957-4909-9eea-958a2f9af657/sys-salesforce-api/1.0.0/sys-salesforce-api-1.0.0.pom
+      - run:
           name: Build
           command: |
             mvn clean compile 
