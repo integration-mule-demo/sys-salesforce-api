@@ -7,7 +7,7 @@
             </tls:context>
         </http:listener-connection>
     </http:listener-config>
-    <apikit:config name="sys-salesforce-api-config" api="resource::0efa2e96-5661-4a95-ab6d-dc1f38566678:sys-salesforce-api:1.0.7:raml:zip:sys-salesforce-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="sys-salesforce-api-config" api="resource::34e5fc2b-f957-4909-9eea-958a2f9af657:sys-salesforce-api:1.0.0:raml:zip:sys-salesforce-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <global-property doc:name="Global Property" doc:id="3fa5d29f-ac89-4d49-8ed4-221940f5f52f" name="mule-env" value="dev" />
     <global-property doc:name="Global Property" doc:id="9f9ffd9d-7299-437b-8573-39b6f5aecdf0" name="mule-key" value="DevEncryptionKey" />
     <configuration-properties doc:name="Configuration properties" doc:id="98169494-bb13-45fd-ab1c-d3e08a90f40c" file="mule-app-config.properties" />

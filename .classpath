@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="org.mule.tooling.API_SPEC_LIB/34e5fc2b-f957-4909-9eea-958a2f9af657/sys-salesforce-api/1.0.0"/>
 	<classpathentry kind="con" path="org.mule.tooling.MULE_PROJECT_LIB"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.munit/munit-tools/2.3.9"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.munit/munit-runner/2.3.9"/>
-	<classpathentry kind="con" path="org.mule.tooling.API_SPEC_LIB/0efa2e96-5661-4a95-ab6d-dc1f38566678/sys-salesforce-api/1.0.7"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-jms-connector/1.6.3"/>
 	<classpathentry kind="con" path="MULE_LIB/cc568b69-a181-4d4c-b044-90054c52897b/json-logger/2.0.1"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.connectors/mule-amqp-connector/1.6.0"/>

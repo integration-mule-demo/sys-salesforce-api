@@ -29,7 +29,7 @@
 				<groupId>org.mule.tools.maven</groupId>
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
-				<extensions>true</extensions>				
+				<extensions>true</extensions>
 				<configuration>
 					<cloudHubDeployment>
 						<username>${anypoint.user}</username>
@@ -38,12 +38,12 @@
 						<workerType>${anypoint.workerType}</workerType>
 						<environment>${anypoint.env}</environment>
 						<muleVersion>${app.runtime}</muleVersion>
-						<applicationName>${anypoint.appName}</applicationName>																		
+						<applicationName>${anypoint.appName}</applicationName>
 						<region>${anypoint.region}</region>
 						<objectStoreV2>${anypoint.osv2}</objectStoreV2>
 					</cloudHubDeployment>
 					<classifier>mule-application</classifier>
-				</configuration>								
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.mulesoft.munit.tools</groupId>
@@ -127,13 +127,6 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>0efa2e96-5661-4a95-ab6d-dc1f38566678</groupId>
-			<artifactId>sys-salesforce-api</artifactId>
-			<version>1.0.7</version>
-			<classifier>raml</classifier>
-			<type>zip</type>
-		</dependency>
-		<dependency>
 			<groupId>com.mulesoft.munit</groupId>
 			<artifactId>munit-runner</artifactId>
 			<version>2.3.9</version>
@@ -152,6 +145,13 @@
 			<artifactId>assertions</artifactId>
 			<version>1.0.2</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>34e5fc2b-f957-4909-9eea-958a2f9af657</groupId>
+			<artifactId>sys-salesforce-api</artifactId>
+			<version>1.0.0</version>
+			<classifier>raml</classifier>
+			<type>zip</type>
 		</dependency>
 	</dependencies>
 
