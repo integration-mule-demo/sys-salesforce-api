@@ -29,15 +29,21 @@
 				<groupId>org.mule.tools.maven</groupId>
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
-				<extensions>true</extensions>
+				<extensions>true</extensions>				
 				<configuration>
-					<deploymentType>cloudhub</deploymentType>
-					<muleVersion>4.4.0</muleVersion>
-					<username>dtluisf-architect</username>
-					<password>Luis1980Plus</password>
-					<redeploy>true</redeploy>
-					<environment>Sandbox</environment>
-				</configuration>
+					<cloudHubDeployment>
+						<username>${anypoint.user}</username>
+						<password>${anypoint.password}</password>
+						<workers>${anypoint.workers}</workers>
+						<workerType>${anypoint.workerType}</workerType>
+						<environment>${anypoint.env}</environment>
+						<muleVersion>${app.runtime}</muleVersion>
+						<applicationName>${anypoint.appName}</applicationName>																		
+						<region>${anypoint.region}</region>
+						<objectStoreV2>${anypoint.osv2}</objectStoreV2>
+					</cloudHubDeployment>
+					<classifier>mule-application</classifier>
+				</configuration>								
 			</plugin>
 			<plugin>
 				<groupId>com.mulesoft.munit.tools</groupId>
