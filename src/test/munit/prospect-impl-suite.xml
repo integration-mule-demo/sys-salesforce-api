@@ -103,13 +103,10 @@
 			<flow-ref doc:name="post-prospect-subflow" doc:id="c839a4eb-e2ea-48cf-8705-569811478d37" name="post-prospect-subflow" />
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:verify-call doc:name="Verify finishing flow" doc:id="d92616ea-8807-4b25-b32f-31ba0e84baec" processor="json-logger:logger" >
+			<munit-tools:verify-call doc:name="Verify finishing flow" doc:id="d92616ea-8807-4b25-b32f-31ba0e84baec" processor="ee:transform" >
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="End" attributeName="doc:name" />
-					<munit-tools:with-attribute whereValue="229d63cd-171e-4493-bf1a-b430225c9240" attributeName="doc:id" />
-					<munit-tools:with-attribute whereValue="JSON_Logger_Config" attributeName="config-ref" />
-					<munit-tools:with-attribute whereValue="Finishing flow" attributeName="message" />
-					<munit-tools:with-attribute whereValue="END" attributeName="tracePoint" />
+					<munit-tools:with-attribute whereValue="Format Output" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="be1ca450-7226-407a-bc4b-296043936c74" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 			</munit-tools:verify-call>
 		</munit:validation>
@@ -134,13 +131,10 @@
 			<flow-ref doc:name="get-prospect-by-ID-subflow" doc:id="a01cdd1c-0dc6-4171-b854-b04b677aa71b" name="get-prospect-by-ID-subflow" />
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:verify-call doc:name="Verify finishing flow" doc:id="dce4a7e2-8823-41e6-9685-c25087f1bc9a" processor="json-logger:logger">
+			<munit-tools:verify-call doc:name="Verify finishing flow" doc:id="dce4a7e2-8823-41e6-9685-c25087f1bc9a" processor="ee:transform">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="End" attributeName="doc:name" />
-					<munit-tools:with-attribute whereValue="7909fd48-020b-480f-ae25-55adc79e7555" attributeName="doc:id" />
-					<munit-tools:with-attribute whereValue="JSON_Logger_Config" attributeName="config-ref" />
-					<munit-tools:with-attribute whereValue="Finishing flow" attributeName="message" />
-					<munit-tools:with-attribute whereValue="END" attributeName="tracePoint" />
+					<munit-tools:with-attribute whereValue="Format Output" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="9964f770-5574-4c33-9087-3648c3691e50" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 			</munit-tools:verify-call>
 		</munit:validation>
@@ -165,13 +159,10 @@
 			<flow-ref doc:name="get-prospect-by-ID-subflow" doc:id="d88700a0-a07f-474b-b900-19998cc9153f" name="get-prospect-by-ID-subflow" />
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:verify-call doc:name="Verify finishing flow is not called" doc:id="4a7f7e6b-a65c-4ae7-bd5f-1f3c3b159ee9" processor="json-logger:logger" times="0">
+			<munit-tools:verify-call doc:name="Verify finishing flow is not called" doc:id="4a7f7e6b-a65c-4ae7-bd5f-1f3c3b159ee9" processor="ee:transform" times="0">
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="End" attributeName="doc:name" />
-					<munit-tools:with-attribute whereValue="7909fd48-020b-480f-ae25-55adc79e7555" attributeName="doc:id" />
-					<munit-tools:with-attribute whereValue="JSON_Logger_Config" attributeName="config-ref" />
-					<munit-tools:with-attribute whereValue="Finishing flow" attributeName="message" />
-					<munit-tools:with-attribute whereValue="END" attributeName="tracePoint" />
+					<munit-tools:with-attribute whereValue="Format Output" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="9964f770-5574-4c33-9087-3648c3691e50" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 			</munit-tools:verify-call>
 		</munit:validation>
@@ -230,13 +221,10 @@
 			<flow-ref doc:name="patch-prospect-subflow" doc:id="6903f93e-3050-4ac2-8c57-2e33b76d25a3" name="patch-prospect-subflow" />
 		</munit:execution>
 		<munit:validation >
-			<munit-tools:verify-call doc:name="Verify finishing flow" doc:id="564e3d81-d251-4700-a5a6-430aa0035905" processor="json-logger:logger" >
+			<munit-tools:verify-call doc:name="Verify finishing flow" doc:id="564e3d81-d251-4700-a5a6-430aa0035905" processor="ee:transform" >
 				<munit-tools:with-attributes >
-					<munit-tools:with-attribute whereValue="End" attributeName="doc:name" />
-					<munit-tools:with-attribute whereValue="d0f6ab42-2cbb-495d-9a0d-b47a21f54693" attributeName="doc:id" />
-					<munit-tools:with-attribute whereValue="JSON_Logger_Config" attributeName="config-ref" />
-					<munit-tools:with-attribute whereValue="Finishing flow" attributeName="message" />
-					<munit-tools:with-attribute whereValue="END" attributeName="tracePoint" />
+					<munit-tools:with-attribute whereValue="Format Output" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="d3e1d0a7-eff1-4407-b9ae-513308fde483" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 			</munit-tools:verify-call>
 		</munit:validation>
