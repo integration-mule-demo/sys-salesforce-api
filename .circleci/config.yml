@@ -44,7 +44,7 @@ jobs:
           name: cloudhub deployment
           no_output_timeout: 20m
           command: |            
-            mvn clean package deploy -DmuleDeploy  \
+            mvn clean package deploy -DmuleDeploy -DskipTests \
             -Danypoint.user=${ANYPOINT_USER} \
             -Danypoint.password=${ANYPOINT_PASSWORD} \
             -Danypoint.workers=${MULE_WORKER} \
