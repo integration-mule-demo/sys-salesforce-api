@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <servers>
-        <!-- MuleSoft Nexus EE Repository -->
-        <server>
-            <id>MuleRepository</id>
-            <username>${mulerepo.user}</username>
-            <password>${mulerepo.password}</password>
-        </server>
         <server>
             <id>anypoint-exchange-v3</id>
             <username>${anypoint.user}</username>
             <password>${anypoint.password}</password>
+        </server>
+        <server>
+            <id>maven-repo</id>
+            <username>${anypoint.user}</username>
+            <password>${anypoint.password}</password>
+        </server>
+        <server>
+            <id>MuleRepository</id>
+            <username>${anypoint.repo.user}</username>
+            <password>${anypoint.repo.password}</password>
         </server>
     </servers>
     <profiles>
@@ -24,6 +28,12 @@
                     <id>anypoint-exchange-v3</id>
                     <name>Anypoint Exchange</name>
                     <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+                    <layout>default</layout>
+                </repository>
+                <repository>
+                    <id>maven-repo</id>
+                    <name>Maven Central</name>
+                    <url>https://repo.maven.apache.org/maven2/</url>
                     <layout>default</layout>
                 </repository>
                 <repository>
